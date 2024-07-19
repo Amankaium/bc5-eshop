@@ -2,6 +2,8 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.models import User
 from .models import Product
 from costumerapp.models import Costumer
+from .forms import ProductForm
+
 
 # Create your views here.
 def homepage(request):
@@ -42,6 +44,23 @@ def product_detail(request, id):
         "product": product_object,
     }
     return render(request, 'product_detail.html', context)
+
+
+def product_create(request):
+    context = {}
+    context["product_form"] = ProductForm()
+    
+    if request.method == "GET":
+        return render(request, 'product_create.html', context)
+    if request.method == "POST":
+        product_form = ProductForm(request.POST)
+        if product_form.is_valid():
+            product_form.save()
+            return HttpResponse("Успешно сохранено!")
+        return HttpResponse("Ошибка валидации!")
+        
+        
+    
 
 def user_cabinet(request, id):
     user = User.objects.get(id=id)
