@@ -78,3 +78,10 @@ def users_list(request):
     user_list = User.objects.all()
     context = {"users": user_list}
     return render(request, 'user_list.html', context)
+
+def search(request):
+    keyword = request.GET["keyword"]
+    # LIKE
+    products = Product.objects.filter(name__icontains=keyword)
+    context = {"products": products}
+    return render(request, 'search_result.html', context)
