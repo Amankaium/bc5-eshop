@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .models import Product
 from costumerapp.models import Costumer
 from .forms import ProductForm
+from .filters import ProductFilter
 
 
 # Create your views here.
@@ -10,7 +11,12 @@ def homepage(request):
     # SELECT * FROM Product;
     product_list = Product.objects.all()
     
-    context = {"products": product_list}
+    filter_object = ProductFilter(
+        data=request.GET,
+        queryset=product_list
+    )
+    
+    context = {"filter_object": filter_object}
     
     # return HttpResponse("Hello Django!")
     return render(request, 'index.html', context)
