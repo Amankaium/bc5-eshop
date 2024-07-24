@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth.models import User
+from django.db.models import Q
 from .models import Product
 from costumerapp.models import Costumer
 from .forms import ProductForm
@@ -81,7 +82,10 @@ def users_list(request):
 
 def search(request):
     keyword = request.GET["keyword"]
-    # LIKE
-    products = Product.objects.filter(name__icontains=keyword)
+    # WHERE name LIKE '%keyword%' OR description LIKE '%keyword%'
+    products = Product.objects.filter(
+        Q(name__icontains=keyword) |
+        Q(description__icontains=keyword)
+    )
     context = {"products": products}
     return render(request, 'search_result.html', context)
