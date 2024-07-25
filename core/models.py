@@ -44,7 +44,7 @@ class Profile(models.Model):
     user = models.OneToOneField(
         to=User,
         on_delete=models.SET_NULL,
-        null=True, blank=True
+        null=True, blank=True,
     )
     photo = models.ImageField(
         verbose_name="фото",

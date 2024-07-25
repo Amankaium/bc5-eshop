@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from .models import Product
 from costumerapp.models import Costumer
-from .forms import ProductForm
+from .forms import *
 from .filters import ProductFilter
 
 
@@ -89,3 +89,16 @@ def search(request):
     )
     context = {"products": products}
     return render(request, 'search_result.html', context)
+
+def profile_create(request):
+    context = {}
+    context["form"] = ProfileForm()
+    
+    if request.method == "GET":
+        return render(request, 'profile/create.html', context)
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("Успешно сохранено!")
+        return HttpResponse("Ошибка валидации!")
