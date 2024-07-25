@@ -102,3 +102,17 @@ def profile_create(request):
             form.save()
             return HttpResponse("Успешно сохранено!")
         return HttpResponse("Ошибка валидации!")
+
+def profile_update(request, id):
+    context = {}
+    profile_object = Profile.objects.get(id=id)
+    context["form"] = ProfileForm(instance=profile_object)
+    
+    if request.method == "GET":
+        return render(request, "profile/update.html", context)
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance=profile_object)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("Успешно обновлено!")
+        return HttpResponse("Ошибка валидации!")

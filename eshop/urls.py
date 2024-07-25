@@ -36,6 +36,7 @@ urlpatterns = [
     path('new-detail/<int:id>/', new_detail, name='new-detail'),
     path('new-create/', new_create, name='new-create'),
     path('profile-create/', profile_create, name='profile-create'),
+    path('profile-update/<int:id>/', profile_update, name='profile-update'),
 ]   + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # 3
 
 
