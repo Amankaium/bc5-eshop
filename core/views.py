@@ -6,6 +6,7 @@ from costumerapp.models import Costumer
 from .forms import *
 from .filters import ProductFilter
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 
 
 # Create your views here.
@@ -19,6 +20,7 @@ def homepage(request):
     )
     
     context = {"filter_object": filter_object}
+    # messages.add_message(request, messages.INFO, "Hello world")
     
     # return HttpResponse("Hello Django!")
     return render(request, 'index.html', context)
@@ -153,12 +155,16 @@ def signin(request):
             )
             if user is not None:
                 login(request, user)
+                messages.success(request, "Вы успешно авторизовались!")
                 return redirect('/')
-            return HttpResponse("Логин и/или пароль неверны")
             
+            messages.warning(request, "Логин и/или пароль неверны")
+        else:
+            messages.warning(request, "Данные не валидны")
+
     form = AuthForm()
     context["form"] = form
-    return render(request, 'profile/signin.html', context) # todo
+    return render(request, 'profile/signin.html', context) 
         
         
 def signout(request):
