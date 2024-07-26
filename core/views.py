@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.models import User
 from django.db.models import Q
 from .models import Product
@@ -116,3 +116,22 @@ def profile_update(request, id):
             form.save()
             return HttpResponse("Успешно обновлено!")
         return HttpResponse("Ошибка валидации!")
+
+
+def registration(request):
+    context = {}
+    
+    if request.method == "POST":
+        # create user object
+        reg_form = RegistrationForm(request.POST)
+        if reg_form.is_valid():
+            user_object = reg_form.save()
+            password = request.POST["password"]
+            user_object.set_password(password)
+            user_object.save()
+            return redirect('/')
+        return HttpResponse("Ошибка валидации")
+    
+    reg_form = RegistrationForm()
+    context["reg_form"] = reg_form
+    return render(request, 'profile/registration.html', context)
