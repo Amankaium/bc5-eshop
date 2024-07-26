@@ -5,6 +5,7 @@ from .models import Product
 from costumerapp.models import Costumer
 from .forms import *
 from .filters import ProductFilter
+from django.contrib.auth import authenticate, login
 
 
 # Create your views here.
@@ -135,3 +136,27 @@ def registration(request):
     reg_form = RegistrationForm()
     context["reg_form"] = reg_form
     return render(request, 'profile/registration.html', context)
+
+
+def signin(request):
+    context = {}
+    
+    if request.method == "POST":
+        form = AuthForm(request.POST)
+        if form.is_valid():
+            username = request.POST["username"]
+            password = request.POST["password"]
+            user = authenticate(
+                request, 
+                username=username,
+                password=password
+            )
+            if user is not None:
+                login(request, user)
+                return redirect('/')
+            return HttpResponse("Логин и/или пароль неверны")
+            
+    form = AuthForm()
+    context["form"] = form
+    return render(request, 'profile/signin.html', context) # todo
+        
