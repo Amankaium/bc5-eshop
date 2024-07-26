@@ -30,6 +30,7 @@ urlpatterns = [
     path('user/<int:id>/', user_cabinet, name='user-cabinet'), 
     path('registration/', registration, name='registration'), 
     path('signin/', signin, name='signin'), 
+    path('signout/', signout, name='signout'), 
     path('product/<int:id>/', product_detail, name='product-detail'),
     path('product-create/', product_create, name='product-create'),
     path('costumers/', costumer_view),

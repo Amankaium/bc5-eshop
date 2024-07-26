@@ -5,7 +5,7 @@ from .models import Product
 from costumerapp.models import Costumer
 from .forms import *
 from .filters import ProductFilter
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 
 # Create your views here.
@@ -160,3 +160,7 @@ def signin(request):
     context["form"] = form
     return render(request, 'profile/signin.html', context) # todo
         
+        
+def signout(request):
+    logout(request)
+    return redirect('/')
