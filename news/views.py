@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import New
+from django.contrib import messages
 
 
 def news_list(request):
@@ -35,5 +36,6 @@ def new_create(request):
             title=title,
             article=text,
         )
+        messages.success(request, "Новость успешно добавлена!")
         return redirect(f'/new-detail/{new_object.id}/')
 
