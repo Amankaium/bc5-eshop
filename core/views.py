@@ -108,8 +108,22 @@ def product_create(request):
             product_form.save()
             return HttpResponse("Успешно сохранено!")
         return HttpResponse("Ошибка валидации!")
+
+
+class ProductCreateView(View):
+    def get(self, request):
+        context = {}
+        context["product_form"] = ProductForm()
+        return render(request, 'product_create.html', context)
         
-        
+    def post(self, request):
+        product_form = ProductForm(request.POST)
+        if product_form.is_valid():
+            product_form.save()
+            return HttpResponse("Успешно сохранено!")
+        return HttpResponse("Ошибка валидации!")
+
+
 class UserCabinet(DetailView):
     model = User
     template_name = 'cabinet.html' # auth/user_detail.html

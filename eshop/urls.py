@@ -35,7 +35,8 @@ urlpatterns = [
     path('signout/', signout, name='signout'), 
     # path('product/<int:id>/', product_detail, name='product-detail'),
     path('product/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
-    path('product-create/', product_create, name='product-create'),
+    # path('product-create/', product_create, name='product-create'),
+    path('product-create/', ProductCreateView.as_view(), name='product-create'),
     path('costumers/', costumer_view),
     path('news/', news_list, name='news-list'),
     # /new-detail/8/
