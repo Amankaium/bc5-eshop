@@ -7,9 +7,26 @@ from .forms import *
 from .filters import ProductFilter
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.views.generic import DetailView
+from django.views import View
 
 
-# Create your views here.
+class Homepage:  # example
+    def get(request):
+        product_list = Product.objects.all()
+    
+        filter_object = ProductFilter(
+            data=request.GET,
+            queryset=product_list
+        )
+        
+        context = {"filter_object": filter_object}
+        # messages.add_message(request, messages.INFO, "Hello world")
+        
+        # return HttpResponse("Hello Django!")
+        return render(request, 'index.html', context)
+
+
 def homepage(request):
     # SELECT * FROM Product;
     product_list = Product.objects.all()
@@ -24,6 +41,29 @@ def homepage(request):
     
     # return HttpResponse("Hello Django!")
     return render(request, 'index.html', context)
+
+
+class ProductDetailView(View):
+    def get(self, request, pk):
+        product_object = Product.objects.get(pk=pk)
+        product_object.views_qty += 1
+        if request.user.is_authenticated:
+            user = request.user
+            if not Costumer.objects.filter(user=user).exists():
+                costumer = Costumer.objects.create(
+                    name=user.username,
+                    age=0,
+                    gender='-',
+                    user=user,
+                )
+            costumer = user.costumer
+            product_object.costumer_views.add(costumer)       
+        product_object.save()
+        context = {
+            "product": product_object,
+        }
+        return render(request, 'product_detail.html', context)
+    
 
 
 def product_detail(request, id):
@@ -70,12 +110,15 @@ def product_create(request):
         return HttpResponse("Ошибка валидации!")
         
         
-    
+class UserCabinet(DetailView):
+    model = User
+    template_name = 'cabinet.html' # auth/user_detail.html
 
-def user_cabinet(request, id):
-    user = User.objects.get(id=id)
-    context = {"user": user}
-    return render(request, 'cabinet.html', context)
+
+# def user_cabinet(request, id):
+#     user = User.objects.get(id=id)
+#     context = {"user": user}
+#     return render(request, 'cabinet.html', context)
 
 
 def users_list(request):
