@@ -45,7 +45,18 @@ def homepage(request):
 
 class ProductDetailView(View):
     def get(self, request, pk):
-        product_object = Product.objects.get(pk=pk)
+        try:
+            product_object = Product.objects.get(pk=pk)
+        except Product.DoesNotExist:
+            # v1
+            # messages.error(request, "Такого товара нет!")
+            # return redirect('/')
+            
+            # v2
+            return HttpResponse("Not found", status=404)
+        # except:
+        #     return HttpResponse("что-то не так")
+        
         product_object.views_qty += 1
         if request.user.is_authenticated:
             user = request.user
@@ -126,7 +137,7 @@ class ProductCreateView(View):
 
 class UserCabinet(DetailView):
     model = User
-    template_name = 'cabinet.html' # auth/user_detail.html
+    template_name = 'cabinet.html'  # auth/user_detail.html
 
 
 # def user_cabinet(request, id):
