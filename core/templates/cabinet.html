@@ -16,6 +16,8 @@
             <img src="{{ user.profile.photo.url }}" alt="" height="250px">
         </p>
     {% endif %}
-    <a class="btn btn-warning" href="{% url 'profile-update' user.profile.id %}">Изменить</a>
+    {% if request.user == user %}
+        <a class="btn btn-warning" href="{% url 'profile-update' user.profile.id %}">Изменить</a>
+    {% endif %}
 {% endif %}
 {% endblock %}

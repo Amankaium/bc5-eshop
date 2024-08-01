@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.generic import DetailView
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from core.mixins import StaffOnlyMixin
 
 
 class Homepage:  # example
@@ -121,7 +123,7 @@ def product_create(request):
         return HttpResponse("Ошибка валидации!")
 
 
-class ProductCreateView(View):
+class ProductCreateView(StaffOnlyMixin, View):
     def get(self, request):
         context = {}
         context["product_form"] = ProductForm()
@@ -177,6 +179,11 @@ def profile_create(request):
 def profile_update(request, id):
     context = {}
     profile_object = Profile.objects.get(id=id)
+    
+    if request.user != profile_object.user:
+        messages.error(request, "Нет доступа")
+        return redirect('/')
+
     context["form"] = ProfileForm(instance=profile_object)
     
     if request.method == "GET":
